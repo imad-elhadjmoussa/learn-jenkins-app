@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -39,31 +38,30 @@ pipeline {
         }
 
         stage('Test') {
-    agent {
-        docker {
-            image 'node:18-alpine'
-            reuseNode true
-        }
-    }
-    environment {
-        CI = 'true'
-        JEST_JUNIT_OUTPUT_DIR = 'test-results'
-        JEST_JUNIT_OUTPUT_NAME = 'junit.xml'
-    }
-    steps {
-        sh '''
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            environment {
+                CI = 'true'
+                JEST_JUNIT_OUTPUT_DIR = 'test-results'
+                JEST_JUNIT_OUTPUT_NAME = 'junit.xml'
+            }
+            steps {
+                sh '''
             echo "===== Test Started ====="
             npm test -- --watchAll=false --forceExit --reporters=default --reporters=jest-junit
             echo "===== Test Completed ====="
         '''
-    }
-}
-
+            }
+        }
     }
 
     post {
-    always {
-        junit allowEmptyResults: true, testResults: 'test-results/junit.xml'
+        always {
+            junit allowEmptyResults: true, testResults: 'test-results/junit.xml'
+        }
     }
-}
 }
