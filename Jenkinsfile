@@ -53,7 +53,7 @@ pipeline {
     steps {
         sh '''
             echo "===== Test Started ====="
-            npm test -- --reporters=default --reporters=jest-junit
+            npm test -- --watchAll=false --forceExit --reporters=default --reporters=jest-junit
             echo "===== Test Completed ====="
         '''
     }
