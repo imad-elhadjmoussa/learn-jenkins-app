@@ -66,21 +66,20 @@ pipeline {
         stage('Deploy') {
             agent {
                 docker {
-                    image 'node:18-alpine'
+                    image 'node:20-alpine'
                     reuseNode true
                 }
             }
 
             steps {
-                retry(3) {
                     sh '''
                         echo "===== Deploy Started ====="
-                        npm install netlify-cli@17 --no-save --ignore-scripts
+                        npm install netlify-cli@17 
                         node_modules/.bin/netlify --version
-                        node_modules/.bin/netlify deploy --dir=build --prod --site=$NETLIFY_SITE_ID
+                        node_modules/.bin/netlify status
+                        node_modules/.bin/netlify deploy --dir=build --prod
                         echo "===== Deploy Completed ====="
                 '''
-                }
             }
         }
     }
