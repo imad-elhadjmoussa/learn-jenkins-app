@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        NETLIFY_SITE_ID= '8874d603-7b32-4539-92d6-f3e07b52f0b9'
+        NETLIFY_AUTH_TOKEN= credentials('netlify-token')
+    }
+
     stages {
         stage('Build') {
             agent {
@@ -51,10 +56,30 @@ pipeline {
             }
             steps {
                 sh '''
-            echo "===== Test Started ====="
-            npm test -- --watchAll=false --forceExit --reporters=default --reporters=jest-junit
-            echo "===== Test Completed ====="
-        '''
+                    echo "===== Test Started ====="
+                    npm test -- --watchAll=false --forceExit --reporters=default --reporters=jest-junit
+                    echo "===== Test Completed ====="
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+
+            steps {
+                sh '''
+                    echo "===== Deploy Started ====="
+                    npm i netlify-cli
+
+                    node_modules/.bin/netlify status
+                    
+                    echo "===== Deploy Completed ====="
+                '''
             }
         }
     }
