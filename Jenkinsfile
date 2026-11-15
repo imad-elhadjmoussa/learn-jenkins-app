@@ -74,12 +74,12 @@ pipeline {
             steps {
                 retry(3) {
                     sh '''
-                echo "===== Deploy Started ====="
-                npm install netlify-cli --no-save --ignore-scripts
-                node_modules/.bin/netlify status
-                node_modules/.bin/netlify deploy --dir=build --prod
-                echo "===== Deploy Completed ====="
-            '''
+                        echo "===== Deploy Started ====="
+                        npm install netlify-cli@17 --no-save --ignore-scripts
+                        node_modules/.bin/netlify --version
+                        node_modules/.bin/netlify deploy --dir=build --prod --site=$NETLIFY_SITE_ID
+                        echo "===== Deploy Completed ====="
+                '''
                 }
             }
         }
