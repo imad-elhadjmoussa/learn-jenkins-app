@@ -72,14 +72,15 @@ pipeline {
             }
 
             steps {
-                sh '''
-                    echo "===== Deploy Started ====="
-                    npm install netlify-cli --no-save --ignore-scripts
-                    node_modules/.bin/netlify --version
-                    node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --prod
-                    echo "===== Deploy Completed ====="
-                '''
+                retry(3) {
+                    sh '''
+                echo "===== Deploy Started ====="
+                npm install netlify-cli --no-save --ignore-scripts
+                node_modules/.bin/netlify status
+                node_modules/.bin/netlify deploy --dir=build --prod
+                echo "===== Deploy Completed ====="
+            '''
+                }
             }
         }
     }
