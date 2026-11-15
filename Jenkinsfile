@@ -75,9 +75,8 @@ pipeline {
                 sh '''
                     echo "===== Deploy Started ====="
                     npm i netlify-cli
-
                     node_modules/.bin/netlify status
-                    
+                    node_modules/.bin/netlify deploy --dir=build --prod
                     echo "===== Deploy Completed ====="
                 '''
             }
